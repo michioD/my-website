@@ -42,7 +42,7 @@ export default function App() {
               </a>
             ))}
             <a
-              href="mailto:hello@example.com"
+              href="mailto:lfrykman@kth.se"
               className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
             >
               Contact
@@ -111,15 +111,15 @@ export default function App() {
               Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="mailto:hello@example.com" className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors flex items-center space-x-2">
+              <a href="mailto:lfrykman@kth.se" className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors flex items-center space-x-2">
                 <Mail size={16} />
                 <span>Get in touch</span>
               </a>
               <div className="flex items-center space-x-3">
-                <a href="#" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="https://github.com/michioD" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
                   <Github size={18} />
                 </a>
-                <a href="#" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
                   <Linkedin size={18} />
                 </a>
               </div>
@@ -133,7 +133,7 @@ export default function App() {
             <h2 className="text-2xl font-bold text-slate-900">Academic Projects</h2>
             <a href="#" className="text-sm font-semibold text-blue-600 hover:underline flex items-center space-x-1">
               <span>View GitHub</span>
-              <ArrowUpRight size={14} />
+              <ArrowUpRight size={14}/>
             </a>
           </div>
 
