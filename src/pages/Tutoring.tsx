@@ -35,7 +35,7 @@ export default function Tutoring() {
           </p>
 
           <PopupButton
-            url="https://calendly.com/lfrykman"
+            url="https://calendly.com/frykman"
             rootElement={document.getElementById("root")}
             text="Book a Session"
             className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition"
