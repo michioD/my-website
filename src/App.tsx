@@ -1,11 +1,20 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Github, Linkedin, Mail, ArrowUpRight, GraduationCap, MapPin } from 'lucide-react';
-import { PROJECTS, BLOG_POSTS } from './constants';
-import { ProjectCard } from './components/ProjectCard';
-import { BlogCard } from './components/BlogCard';
+import { Menu, X } from 'lucide-react';
+import Home from './pages/Home';
+import About from './pages/About';
+import Tutoring from './pages/Tutoring';
 
-export default function App() {
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
+function Layout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -16,9 +25,9 @@ export default function App() {
   }, []);
 
   const navLinks = [
-    { name: 'Projects', href: '#projects' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'About', href: '#about' },
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Tutoring', href: '/tutoring' },
   ];
 
   return (
@@ -26,20 +35,20 @@ export default function App() {
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled ? 'bg-white/90 backdrop-blur-sm py-3 border-b border-slate-100' : 'bg-transparent py-6'}`}>
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-          <a href="#" className="text-lg font-bold tracking-tight text-slate-900">
+          <Link to="/" className="text-lg font-bold tracking-tight text-slate-900">
             Lucas Frykman
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
             <a
               href="mailto:lfrykman@kth.se"
@@ -70,17 +79,17 @@ export default function App() {
           >
             <div className="flex flex-col space-y-4">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-xl font-semibold text-slate-900"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <a
-                href="mailto:hello@example.com"
+                href="mailto:lfrykman@kth.se"
                 className="text-xl font-semibold text-blue-600"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -91,115 +100,8 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <main className="max-w-5xl mx-auto px-6">
-        {/* Hero Section */}
-        <section className="pt-32 pb-16 md:pt-48 md:pb-24">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl"
-          >
-            <div className="flex items-center space-x-2 text-blue-600 font-semibold text-sm mb-4">
-              <GraduationCap size={18} />
-              <span>Teknisk Matematik @ KTH</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight mb-6">
-              Engineering Mathematics student focused on numerical analysis and optimization.
-            </h1>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">
-              Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a href="mailto:lfrykman@kth.se" className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors flex items-center space-x-2">
-                <Mail size={16} />
-                <span>Get in touch</span>
-              </a>
-              <div className="flex items-center space-x-3">
-                <a href="https://github.com/michioD" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
-                  <Github size={18} />
-                </a>
-                <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
-                  <Linkedin size={18} />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="py-16 border-t border-slate-100">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-2xl font-bold text-slate-900">Academic Projects</h2>
-            <a href="#" className="text-sm font-semibold text-blue-600 hover:underline flex items-center space-x-1">
-              <span>View GitHub</span>
-              <ArrowUpRight size={14}/>
-            </a>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PROJECTS.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </section>
-
-        {/* Blog Section */}
-        <section id="blog" className="py-16 border-t border-slate-100">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-2xl font-bold text-slate-900">Writing & Notes</h2>
-          </div>
-
-          <div className="max-w-3xl">
-            {BLOG_POSTS.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section id="about" className="py-16 border-t border-slate-100">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="md:col-span-2 space-y-6">
-              <h2 className="text-2xl font-bold text-slate-900">About Me</h2>
-              <div className="text-slate-600 space-y-4 leading-relaxed">
-                <p>
-                  I am currently pursuing my Master's degree in Engineering Mathematics at KTH. My academic interests lie at the intersection of applied mathematics, computer science, and physics.
-                </p>
-                <p>
-                  Throughout my studies, I have developed a strong foundation in multivariable calculus, linear algebra, and differential equations, complemented by practical skills in programming and data analysis.
-                </p>
-                <p>
-                  When I'm not studying, I enjoy working on side projects that challenge my understanding of algorithms and system design.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Location</h3>
-                <div className="flex items-center space-x-2 text-slate-600">
-                  <MapPin size={16} />
-                  <span>Stockholm, Sweden</span>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Education</h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-slate-900">KTH Royal Institute of Technology</p>
-                    <p className="text-sm text-slate-500">M.Sc. Engineering Mathematics</p>
-                    <p className="text-xs text-slate-400">2024 — Present</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900">KTH Royal Institute of Technology</p>
-                    <p className="text-sm text-slate-500">B.Sc. Engineering Mathematics</p>
-                    <p className="text-xs text-slate-400">2021 — 2024</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="max-w-5xl mx-auto px-6 min-h-[calc(100-24rem)]">
+        {children}
       </main>
 
       {/* Footer */}
@@ -210,11 +112,26 @@ export default function App() {
           </p>
           <div className="flex items-center space-x-6">
             <a href="#" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">Twitter</a>
-            <a href="#" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">GitHub</a>
-            <a href="#" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">LinkedIn</a>
+            <a href="https://github.com/michioD" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">LinkedIn</a>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/tutoring" element={<Tutoring />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
