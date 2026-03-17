@@ -3,6 +3,7 @@ import { GraduationCap, Mail, Github, Linkedin, ArrowUpRight } from 'lucide-reac
 import { PROJECTS, BLOG_POSTS } from '../constants';
 import { ProjectCard } from '../components/ProjectCard';
 import { BlogCard } from '../components/BlogCard';
+import { VisitorStats } from '../components/VisitorStats';
 
 export default function Home() {
   return (
@@ -25,7 +26,7 @@ export default function Home() {
           <p className="text-lg text-slate-600 leading-relaxed mb-8">
             Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 mb-12">
             <a href="mailto:lfrykman@kth.se" className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors flex items-center space-x-2">
               <Mail size={16} />
               <span>Get in touch</span>
@@ -39,6 +40,7 @@ export default function Home() {
               </a>
             </div>
           </div>
+          <VisitorStats />
         </motion.div>
       </section>
 

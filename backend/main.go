@@ -39,6 +39,7 @@ func main() {
 
 	// Endpoint 1: Called silently by your React frontend when a user visits
 	mux.HandleFunc("/api/track", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		ip := getIP(r)
 		
 		// Check if IP already exists in our database

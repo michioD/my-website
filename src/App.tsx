@@ -122,6 +122,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useEffect(() => {
+    // Silently track the visit
+    fetch('http://localhost:8080/api/track').catch((err) => console.error('Error tracking visit:', err));
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
