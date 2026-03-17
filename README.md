@@ -1,20 +1,22 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<img width="600" height="600" alt="GHBanner" src="https://i.pinimg.com/736x/59/4d/fe/594dfefaa9626bfd397d789c512f5927.jpg" />
 </div>
 
-# Run and deploy your AI Studio app
+# Welcome to my e2e web platform!
+This project serves as a secure, high-performance personal portfolio and blog, featuring custom Go-based 
+API proxies and an automated deployment pipeline.  
 
-This contains everything you need to run your app locally.
+# The infrastructure layer
 
-View your app in AI Studio: https://ai.studio/apps/bda03f9d-8d48-440f-a115-da250430a580
+Cloud Provisioning & Hardening: Manually provisioned an OCI Compute Instance (Ubuntu 22.04 LTS) with custom Virtual Cloud Network (VCN) settings. Security is enforced through strictly defined OCI Security Lists (limiting ingress to ports 80/443/22) and host-level IP Tables configuration.
 
 ## Run Locally
 
 **Prerequisites:**  Node.js
 
-
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Build:
+   `npm run build`
 3. Run the app:
    `npm run dev`
