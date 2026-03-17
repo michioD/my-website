@@ -20,7 +20,8 @@ export default function Home() {
             <span>Teknisk Matematik @ KTH</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight mb-6">
-            Engineering Mathematics student focused on numerical analysis and optimization.
+            {/* Engineering Mathematics student focused on numerical analysis and optimization. */}
+            Welcome 😸
           </h1>
           <p className="text-lg text-slate-600 leading-relaxed mb-8">
             Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
