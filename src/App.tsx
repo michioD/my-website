@@ -34,7 +34,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen font-sans">
       {/* Visitor Stats Floating Widget */}
-      <div className="fixed top-4 left-4 z-[60] scale-75 origin-top-left opacity-70 hover:opacity-100 transition-all hover:scale-90 pointer-events-auto hidden sm:block">
+      <div className="fixed top-4 left-4 z-[60] scale-75 origin-top-left opacity-70 hover:opacity-100 transition-all hover:scale-90 pointer-events-auto">
         <VisitorStats />
       </div>
 
@@ -130,7 +130,8 @@ function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   useEffect(() => {
     // Silently track the visit
-    fetch('http://localhost:8080/api/track').catch((err) => console.error('Error tracking visit:', err));
+    // fetch('http://localhost:8080/api/track').catch((err) => console.error('Error tracking visit:', err));
+    fetch('/api/track').catch((err) => console.error('Error tracking visit:', err));
   }, []);
 
   return (

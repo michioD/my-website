@@ -9,7 +9,7 @@ export function VisitorStats() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/stats')
+    fetch('/api/stats')
       .then((res) => res.json())
       .then((data: Stats) => {
         setStats(data);
@@ -26,10 +26,17 @@ export function VisitorStats() {
   }
 
   const countries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
-
   if (countries.length === 0) {
-    return null;
+      return (
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-2 text-slate-500 font-semibold">
+          <Globe size={14} />
+          <span className="text-xs">Awaiting first visitor...</span>
+          </div>
+          </div>
+      );
   }
+
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-slate-200 shadow-sm">
