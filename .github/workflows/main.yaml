@@ -12,16 +12,30 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # --- 1. FRONTEND BUILD ---
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Uses a modern, stable version of Node
+          node-version: '20'
 
-      - name: Install Dependencies and Build
+      - name: Install Dependencies and Build Frontend
         run: |
           npm ci
           npm run build
 
+      # --- 2. BACKEND BUILD ---
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build Go Backend
+        run: |
+          cd backend
+          # Compile the Go binary specifically for the Ubuntu server environment
+          GOOS=linux GOARCH=amd64 go build -o go-server main.go
+
+      # --- 3. DEPLOY VIA RSYNC ---
       - name: Deploy via Rsync
         env:
           PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
@@ -36,23 +50,37 @@ jobs:
           # Tell GitHub to trust your Oracle server's fingerprint
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
           
-          # Sync ONLY the compiled build folder to your server
-          # IMPORTANT: Change './dist/' to './build/' below if you used Create React App!
+          # Ensure the backend directory exists on the server before syncing
+          ssh ubuntu@$HOST "mkdir -p /var/www/my-website/backend"
+          
+          # Sync the compiled frontend build folder
           rsync -avz --delete ./dist/ ubuntu@$HOST:/var/www/my-website/
+          
+          # Sync the compiled Go binary
+          rsync -avz ./backend/go-server ubuntu@$HOST:/var/www/my-website/backend/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+      # --- 4. SECURE SECRETS & RESTART ---
+      - name: Inject Secret and Restart Backend
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          PROD_KEY: ${{ secrets.IPSTACK_KEY }}
+        with:
+          host: ${{ secrets.OCI_HOST }}
+          username: ubuntu
+          key: ${{ secrets.OCI_PRIVATE_KEY }}
+          envs: PROD_KEY
+          script: |
+            cd /var/www/my-website/backend
+            
+            # Securely write the key to the local .env file
+            echo "IPSTACK_KEY=$PROD_KEY" > .env
+            chmod 600 .env
+            
+            # Ensure the binary is executable
+            chmod +x go-server
+            
+            # Restart the systemd service to pick up the new binary and secrets
+            sudo systemctl restart my-go-backend
 
 
 
@@ -71,6 +99,16 @@ jobs:
 #       - name: Checkout Code
 #         uses: actions/checkout@v4
 #
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20' # Uses a modern, stable version of Node
+#
+#       - name: Install Dependencies and Build
+#         run: |
+#           npm ci
+#           npm run build
+#
 #       - name: Deploy via Rsync
 #         env:
 #           PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
@@ -85,5 +123,7 @@ jobs:
 #           # Tell GitHub to trust your Oracle server's fingerprint
 #           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 #
-#           # Sync all files from this GitHub repo to your server
-#           rsync -avz --delete ./ ubuntu@$HOST:/var/www/my-website/
+#           # Sync ONLY the compiled build folder to your server
+#           # IMPORTANT: Change './dist/' to './build/' below if you used Create React App!
+#           rsync -avz --delete ./dist/ ubuntu@$HOST:/var/www/my-website/
+#
