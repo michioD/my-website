@@ -32,21 +32,21 @@ export function VisitorStats() {
   }
 
   return (
-    <div className="bg-slate-50 rounded-lg p-6 border border-slate-100">
-      <div className="flex items-center space-x-2 text-slate-900 font-semibold mb-4">
-        <Globe size={18} className="text-blue-500" />
-        <span>Recent Visitors By Country</span>
+    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-slate-200 shadow-sm">
+      <div className="flex items-center space-x-2 text-slate-900 font-semibold mb-2">
+        <Globe size={14} className="text-blue-500" />
+        <span className="text-xs">Recent Visitors</span>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {countries.map(([country, count]) => (
           <motion.div
             key={country}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="px-3 py-1 bg-white rounded-full border border-slate-200 text-xs font-medium text-slate-600 flex items-center space-x-2 shadow-sm"
+            className="px-2 py-0.5 bg-slate-50 rounded-full border border-slate-100 text-[10px] font-medium text-slate-600 flex items-center space-x-1.5 shadow-sm"
           >
             <span>{country}</span>
-            <span className="bg-blue-100 text-blue-700 px-1.5 rounded-full font-bold">
+            <span className="bg-blue-100 text-blue-700 px-1 rounded-full font-bold">
               {count}
             </span>
           </motion.div>

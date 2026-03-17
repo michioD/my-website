@@ -3,7 +3,6 @@ import { GraduationCap, Mail, Github, Linkedin, ArrowUpRight } from 'lucide-reac
 import { PROJECTS, BLOG_POSTS } from '../constants';
 import { ProjectCard } from '../components/ProjectCard';
 import { BlogCard } from '../components/BlogCard';
-import { VisitorStats } from '../components/VisitorStats';
 
 export default function Home() {
   return (
@@ -40,7 +39,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <VisitorStats />
         </motion.div>
       </section>
 

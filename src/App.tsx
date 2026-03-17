@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Tutoring from './pages/Tutoring';
+import { VisitorStats } from './components/VisitorStats';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,6 +33,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen font-sans">
+      {/* Visitor Stats Floating Widget */}
+      <div className="fixed top-4 left-4 z-[60] scale-75 origin-top-left opacity-70 hover:opacity-100 transition-all hover:scale-90 pointer-events-auto hidden sm:block">
+        <VisitorStats />
+      </div>
+
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled ? 'bg-white/90 backdrop-blur-sm py-3 border-b border-slate-100' : 'bg-transparent py-6'}`}>
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
