@@ -3,9 +3,13 @@
 </div>
 
 # Welcome to my e2e web platform!
-This project serves as a secure, high-performance personal portfolio and blog, featuring custom Go-based 
-API proxies and an automated deployment pipeline.  
+This project serves as a secure, high-performance personal portfolio and blog, featuring custom Go-based API proxies and an automated deployment pipeline.  
 
+You can access the website here: [michiod.site](https://michiod.site/)
+
+<!-- # Backend -->
+
+<!-- # Frontend -->
 # The infrastructure layer
 
 Cloud Provisioning & Hardening: Manually provisioned an OCI Compute Instance (Ubuntu 22.04 LTS) with custom Virtual Cloud Network (VCN) settings. Security is enforced through strictly defined OCI Security Lists (limiting ingress to ports 80/443/22) and host-level IP Tables configuration.
@@ -20,3 +24,4 @@ Cloud Provisioning & Hardening: Manually provisioned an OCI Compute Instance (Ub
    `npm run build`
 3. Run the app:
    `npm run dev`
+
