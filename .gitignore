@@ -1,1 +1,11 @@
 .env
+# Terraform specific
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+terraform/import.tf
+
+#node_modules and dist
+node_modules/ 
+dist/
