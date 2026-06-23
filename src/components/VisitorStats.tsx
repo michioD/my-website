@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import { flag } from 'country-emoji';
 
 type Stats = { [country: string]: number };
 
@@ -68,7 +69,10 @@ export function VisitorStats() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="px-2 py-0.5 bg-slate-50 rounded-full border border-slate-100 text-[10px] font-medium text-slate-600 flex items-center space-x-1.5 shadow-sm"
               >
-                <span>{country}</span>
+                <span className="flex items-center gap-1">
+                  <span>{flag(country) || '🌐'}</span>
+                  <span>{country}</span>
+                </span>
                 <span className="bg-blue-100 text-blue-700 px-1 rounded-full font-bold">
                   {count}
                 </span>
