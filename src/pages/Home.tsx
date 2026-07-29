@@ -46,7 +46,7 @@ export default function Home() {
       {/* Projects Section */}
       <section id="projects" className="py-16 border-t border-slate-100">
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-2xl font-bold text-slate-900">Academic Projects</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Portfolio Projects</h2>
           <a href="https://github.com/michioD" className="text-sm font-semibold text-blue-600 hover:underline flex items-center space-x-1">
             <span>View GitHub</span>
             <ArrowUpRight size={14}/>

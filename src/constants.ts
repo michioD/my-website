@@ -20,11 +20,11 @@ export interface BlogPost {
 export const PROJECTS: Project[] = [
   {
     id: '1',
-    title: 'Numerical Methods for PDE',
-    description: 'Implementation of finite element methods for solving partial differential equations in structural mechanics.',
-    tags: ['MATLAB', 'Numerical Analysis', 'PDE'],
+    title: 'Remote LED Matrix ESP-32 Controller',
+    description: 'Implementation of a remote-controlled LED matrix using ESP-32 microcontroller.',
+    tags: ['C++', 'Embedded Systems', 'IoT'],
     link: '#',
-    image: 'https://picsum.photos/seed/math-pde/800/600'
+    image: '/images/ledmatrix.png'
   },
   {
     id: '2',
@@ -33,14 +33,6 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'Optimization', 'Stochastic'],
     link: '#',
     image: 'https://picsum.photos/seed/stochastic/800/600'
-  },
-  {
-    id: '3',
-    title: 'KTH Campus Map API',
-    description: 'A lightweight API for navigating KTH campus buildings and lecture halls.',
-    tags: ['TypeScript', 'Node.js', 'API'],
-    link: '#',
-    image: 'https://picsum.photos/seed/kth-map/800/600'
   }
 ];
 
