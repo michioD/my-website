@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Tutoring from './pages/Tutoring';
 import LedMatrixLog from './pages/LedMatrixLog';
+import VisitorStatsPage from './pages/VisitorStatsPage';
 import { VisitorStats } from './components/VisitorStats';
 
 function ScrollToTop() {
@@ -143,6 +144,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/tutoring" element={<Tutoring />} />
           <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
+          <Route path="/visitor-stats" element={<VisitorStatsPage />} />
         </Routes>
       </Layout>
     </Router>

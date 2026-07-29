@@ -53,8 +53,8 @@ jobs:
           # Ensure the backend directory exists on the server before syncing
           ssh ubuntu@$HOST "mkdir -p /var/www/my-website/backend"
           
-          # Sync the compiled frontend build folder
-          rsync -avz --delete ./dist/ ubuntu@$HOST:/var/www/my-website/
+          # Sync the compiled frontend build folder (excluding the backend directory to preserve the DB!)
+          rsync -avz --delete --exclude 'backend' ./dist/ ubuntu@$HOST:/var/www/my-website/
           
           # Sync the compiled Go binary
           rsync -avz ./backend/go-server ubuntu@$HOST:/var/www/my-website/backend/

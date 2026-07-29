@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Globe, ChevronDown, ChevronUp } from 'lucide-react';
 import { flag } from 'country-emoji';
+import { Link } from 'react-router-dom';
 
 type Stats = { [country: string]: number };
 
@@ -60,24 +61,32 @@ export function VisitorStats() {
             initial={{ height: 0, opacity: 0, marginTop: 0 }}
             animate={{ height: 'auto', opacity: 1, marginTop: 8 }}
             exit={{ height: 0, opacity: 0, marginTop: 0 }}
-            className="flex flex-wrap gap-1.5 overflow-hidden"
+            className="overflow-hidden"
           >
-            {countries.map(([country, count]) => (
-              <motion.div
-                key={country}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="px-2 py-0.5 bg-slate-50 rounded-full border border-slate-100 text-[10px] font-medium text-slate-600 flex items-center space-x-1.5 shadow-sm"
-              >
-                <span className="flex items-center gap-1">
-                  <span>{flag(country) || '🌐'}</span>
-                  <span>{country}</span>
-                </span>
-                <span className="bg-blue-100 text-blue-700 px-1 rounded-full font-bold">
-                  {count}
-                </span>
-              </motion.div>
-            ))}
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {countries.map(([country, count]) => (
+                <motion.div
+                  key={country}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="px-2 py-0.5 bg-slate-50 rounded-full border border-slate-100 text-[10px] font-medium text-slate-600 flex items-center space-x-1.5 shadow-sm"
+                >
+                  <span className="flex items-center gap-1">
+                    <span>{flag(country) || '🌐'}</span>
+                    <span>{country}</span>
+                  </span>
+                  <span className="bg-blue-100 text-blue-700 px-1 rounded-full font-bold">
+                    {count}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+            <Link
+              to="/visitor-stats"
+              className="block w-full text-center py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-md transition-colors"
+            >
+              See records
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
