@@ -4,6 +4,7 @@ export interface Project {
   description: string;
   tags: string[];
   link: string;
+  githubLink?: string;
   image: string;
 }
 
@@ -23,7 +24,8 @@ export const PROJECTS: Project[] = [
     title: 'Remote LED Matrix ESP-32 Controller',
     description: 'Implementation of a remote-controlled LED matrix using ESP-32 microcontroller.',
     tags: ['C++', 'Embedded Systems', 'IoT'],
-    link: '#',
+    link: '/projects/led-matrix',
+    githubLink: 'https://github.com/michioD/led-matrix-esp32',
     image: '/images/ledmatrix.png'
   },
   {
@@ -32,6 +34,7 @@ export const PROJECTS: Project[] = [
     description: 'A Python-based library for solving stochastic programming problems with applications in finance.',
     tags: ['Python', 'Optimization', 'Stochastic'],
     link: '#',
+    githubLink: 'https://github.com/michioD',
     image: 'https://picsum.photos/seed/stochastic/800/600'
   }
 ];

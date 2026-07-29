@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Tutoring from './pages/Tutoring';
+import LedMatrixLog from './pages/LedMatrixLog';
 import { VisitorStats } from './components/VisitorStats';
 
 function ScrollToTop() {
@@ -117,7 +118,6 @@ function Layout({ children }: { children: React.ReactNode }) {
             © {new Date().getFullYear()} Lucas Frykman. Built with React & Tailwind.
           </p>
           <div className="flex items-center space-x-6">
-            <a href="#" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">Twitter</a>
             <a href="https://github.com/michioD" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">GitHub</a>
             <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">LinkedIn</a>
           </div>
@@ -142,6 +142,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/tutoring" element={<Tutoring />} />
+          <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
         </Routes>
       </Layout>
     </Router>

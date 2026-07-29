@@ -18,7 +18,7 @@ export default function About() {
                 I am currently pursuing my Master's degree in Engineering Mathematics at KTH. My academic interests lie at the intersection of applied mathematics, computer science, and physics.
               </p>
               <p>
-                Throughout my studies, I have developed a strong foundation in multivariable calculus, linear algebra, and differential equations, complemented by practical skills in programming and data analysis.
+                
               </p>
               <p>
                 When I'm not studying, I enjoy working on side projects that challenge my understanding of algorithms and system design.
@@ -38,13 +38,11 @@ export default function About() {
               <div className="space-y-3">
                 <div>
                   <p className="font-semibold text-slate-900">KTH Royal Institute of Technology</p>
-                  <p className="text-sm text-slate-500">M.Sc. Engineering Mathematics</p>
-                  <p className="text-xs text-slate-400">2026 — 2028</p>
+                  <p className="text-sm text-slate-500">M.Sc. Computer Science</p>
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900">KTH Royal Institute of Technology</p>
                   <p className="text-sm text-slate-500">B.Sc. Engineering Mathematics</p>
-                  <p className="text-xs text-slate-400">2026</p>
                 </div>
               </div>
             </div>
