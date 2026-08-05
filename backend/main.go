@@ -9,10 +9,35 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var devlogCache struct {
+	sync.RWMutex
+	content string
+}
+
+func fetchDevlog() {
+	resp, err := http.Get("https://raw.githubusercontent.com/michioD/led-matrix-esp32/main/DEVLOG.md")
+	if err != nil {
+		log.Println("Error fetching devlog:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading devlog:", err)
+		return
+	}
+	devlogCache.Lock()
+	devlogCache.content = string(body)
+	devlogCache.Unlock()
+	log.Println("Successfully fetched and cached devlog")
+}
 
 type IPStackResponse struct {
 	CountryName string `json:"country_name"`
@@ -21,6 +46,15 @@ type IPStackResponse struct {
 func main() {
 	// Load local .env if it exists (ignored in production)
 	_ = godotenv.Load()
+
+	// Start background fetch for devlog
+	go func() {
+		fetchDevlog()
+		ticker := time.NewTicker(24 * time.Hour)
+		for range ticker.C {
+			fetchDevlog()
+		}
+	}()
 
 	// Initialize SQLite Database
 	db, err := sql.Open("sqlite3", "./visits.db")
@@ -88,6 +122,16 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		json.NewEncoder(w).Encode(stats)
+	})
+
+	// Endpoint 3: Devlog
+	mux.HandleFunc("/api/devlog", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		devlogCache.RLock()
+		content := devlogCache.content
+		devlogCache.RUnlock()
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(content))
 	})
 
 	log.Println("Go backend running on :8080")

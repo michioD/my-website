@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import { API_BASE_URL } from '../config';
 
 export default function LedMatrixLog() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [devlogContent, setDevlogContent] = useState<string>('Loading devlog...');
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/devlog`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.text();
+      })
+      .then((text) => setDevlogContent(text))
+      .catch((err) => {
+        console.error('Failed to fetch devlog:', err);
+        setDevlogContent('Failed to load devlog content. Please try again later.');
+      });
+  }, []);
 
   return (
     <motion.div
@@ -38,6 +54,9 @@ export default function LedMatrixLog() {
           className={`w-full rounded-xl shadow-lg mb-10 cursor-pointer object-cover transition-all duration-500 ${isExpanded ? 'h-auto aspect-auto' : 'h-64 md:h-80 aspect-video'}`}
           title="Click to expand"
         />
+        <div className="mt-8">
+          <ReactMarkdown>{devlogContent}</ReactMarkdown>
+        </div>
       </div>
     </motion.div>
   );
