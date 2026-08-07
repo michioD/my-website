@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -10,10 +11,13 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/term"
 )
 
 var devlogCache struct {
@@ -47,6 +51,56 @@ func main() {
 	// Load local .env if it exists (ignored in production)
 	_ = godotenv.Load()
 
+	setPwd := flag.Bool("setpwd", false, "Set the admin password interactively and store its hash in the database")
+	flag.Parse()
+
+	// Initialize SQLite Database
+	db, err := sql.Open("sqlite3", "./visits.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Create admin table
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY, hash TEXT)`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if *setPwd {
+		var existingHash string
+		err := db.QueryRow("SELECT hash FROM admin WHERE id = 1").Scan(&existingHash)
+		if err == nil && existingHash != "" {
+			fmt.Print("An admin password already exists. Do you want to change your password? [y/N]: ")
+			var response string
+			fmt.Scanln(&response)
+			response = strings.TrimSpace(strings.ToLower(response))
+			if response != "y" && response != "yes" {
+				fmt.Println("Password setup aborted.")
+				return
+			}
+		}
+
+		fmt.Print("Enter new admin password: ")
+		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println()
+
+		hash, err := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
+		if err != nil {
+			log.Fatal("Failed to hash password:", err)
+		}
+
+		_, err = db.Exec("INSERT OR REPLACE INTO admin (id, hash) VALUES (1, ?)", string(hash))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Password hashed and saved to database successfully.")
+		return
+	}
+
 	// Start background fetch for devlog
 	go func() {
 		fetchDevlog()
@@ -56,15 +110,14 @@ func main() {
 		}
 	}()
 
-	// Initialize SQLite Database
-	db, err := sql.Open("sqlite3", "./visits.db")
+	// Create table if it doesn't exist. The IP is the PRIMARY KEY, enforcing deduplication.
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (ip TEXT PRIMARY KEY, country TEXT)`)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	// Create table if it doesn't exist. The IP is the PRIMARY KEY, enforcing deduplication.
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (ip TEXT PRIMARY KEY, country TEXT)`)
+	// Create blogs table for the Custom CMS
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS blogs (id TEXT PRIMARY KEY, title TEXT, excerpt TEXT, content TEXT, date TEXT, category TEXT)`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,24 +128,24 @@ func main() {
 	mux.HandleFunc("/api/track", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		ip := getIP(r)
-		
+
 		// Check if IP already exists in our database
 		var exists string
 		err := db.QueryRow("SELECT ip FROM users WHERE ip = ?", ip).Scan(&exists)
-		
+
 		if err == sql.ErrNoRows {
 			// New user! Call IPstack securely
 			apiKey := os.Getenv("IPSTACK_KEY")
 			url := fmt.Sprintf("http://api.ipstack.com/%s?access_key=%s", ip, apiKey)
-			
+
 			resp, err := http.Get(url)
 			if err == nil {
 				defer resp.Body.Close()
 				body, _ := io.ReadAll(resp.Body)
-				
+
 				var ipData IPStackResponse
 				json.Unmarshal(body, &ipData)
-				
+
 				if ipData.CountryName != "" {
 					// Save to database so we never call IPstack for this IP again
 					db.Exec("INSERT INTO users (ip, country) VALUES (?, ?)", ip, ipData.CountryName)
@@ -132,6 +185,90 @@ func main() {
 		devlogCache.RUnlock()
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte(content))
+	})
+
+	// Endpoint 4: Custom CMS Blogs
+	mux.HandleFunc("/api/blogs", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		if r.Method == "GET" {
+			rows, err := db.Query("SELECT id, title, excerpt, content, date, category FROM blogs")
+			if err != nil {
+				http.Error(w, "Database error", http.StatusInternalServerError)
+				return
+			}
+			defer rows.Close()
+
+			type Blog struct {
+				ID       string `json:"id"`
+				Title    string `json:"title"`
+				Excerpt  string `json:"excerpt"`
+				Content  string `json:"content"`
+				Date     string `json:"date"`
+				Category string `json:"category"`
+			}
+			var blogs []Blog
+			for rows.Next() {
+				var b Blog
+				rows.Scan(&b.ID, &b.Title, &b.Excerpt, &b.Content, &b.Date, &b.Category)
+				blogs = append(blogs, b)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(blogs)
+			return
+		}
+
+		if r.Method == "POST" {
+			authHeader := r.Header.Get("Authorization")
+			if !strings.HasPrefix(authHeader, "Bearer ") {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+			password := strings.TrimPrefix(authHeader, "Bearer ")
+
+			var hash string
+			err := db.QueryRow("SELECT hash FROM admin WHERE id = 1").Scan(&hash)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					http.Error(w, "Admin password not set up. Run pwdsetup.sh.", http.StatusUnauthorized)
+					return
+				}
+				http.Error(w, "Database error", http.StatusInternalServerError)
+				return
+			}
+
+			if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			var b struct {
+				ID       string `json:"id"`
+				Title    string `json:"title"`
+				Excerpt  string `json:"excerpt"`
+				Content  string `json:"content"`
+				Date     string `json:"date"`
+				Category string `json:"category"`
+			}
+			if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
+				http.Error(w, "Invalid body", http.StatusBadRequest)
+				return
+			}
+
+			_, err = db.Exec("INSERT OR REPLACE INTO blogs (id, title, excerpt, content, date, category) VALUES (?, ?, ?, ?, ?, ?)", b.ID, b.Title, b.Excerpt, b.Content, b.Date, b.Category)
+			if err != nil {
+				http.Error(w, "DB error", http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		}
 	})
 
 	log.Println("Go backend running on :8080")

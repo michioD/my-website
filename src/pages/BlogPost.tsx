@@ -1,12 +1,45 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { BLOG_POSTS } from '../constants';
+import { BLOG_POSTS, BlogPost } from '../constants';
+import { API_BASE_URL } from '../config';
 
 export default function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
-  const post = BLOG_POSTS.find(p => p.id === id);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check static posts first
+    const staticPost = BLOG_POSTS.find(p => p.id === id);
+    if (staticPost) {
+      setPost(staticPost);
+      setLoading(false);
+      return;
+    }
+
+    // If not found statically, fetch from DB
+    fetch(`${API_BASE_URL}/api/blogs`)
+      .then(res => res.json())
+      .then((data: BlogPost[]) => {
+        const dbPost = data.find(p => p.id === id);
+        if (dbPost) {
+          // Parse read time dynamically for DB posts too
+          const wordCount = dbPost.content.trim().split(/\s+/).length;
+          const minutes = Math.max(1, Math.ceil(wordCount / 238));
+          dbPost.readTime = `${minutes} min read`;
+          setPost(dbPost);
+        }
+      })
+      .catch(err => console.error('Failed to fetch blog post:', err))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return <div className="py-24 text-center">Loading...</div>;
+  }
 
   if (!post) {
     return (

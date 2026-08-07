@@ -7,6 +7,7 @@ import About from './pages/About';
 import Tutoring from './pages/Tutoring';
 import Blog from './pages/Blog';
 import BlogPostPage from './pages/BlogPost';
+import Admin from './pages/Admin';
 import LedMatrixLog from './pages/LedMatrixLog';
 import VisitorStatsPage from './pages/VisitorStatsPage';
 import { VisitorStats } from './components/VisitorStats';
@@ -148,6 +149,7 @@ export default function App() {
           <Route path="/tutoring" element={<Tutoring />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPostPage />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
           <Route path="/visitor-stats" element={<VisitorStatsPage />} />
         </Routes>

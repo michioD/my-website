@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { BlogCard } from '../components/BlogCard';
-import { BLOG_POSTS } from '../constants';
+import { BLOG_POSTS, BlogPost } from '../constants';
+import { API_BASE_URL } from '../config';
 
 export default function Blog() {
+  const [posts, setPosts] = useState<BlogPost[]>(BLOG_POSTS);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/blogs`)
+      .then(res => res.json())
+      .then((data: BlogPost[]) => {
+        if (data && data.length > 0) {
+          // Merge dynamic DB posts with static ones
+          setPosts([...data, ...BLOG_POSTS]);
+        }
+      })
+      .catch(err => console.error('Failed to fetch blogs:', err));
+  }, []);
+
   return (
     <div className="pt-32 pb-24">
       <motion.div
@@ -21,7 +36,7 @@ export default function Blog() {
         </div>
 
         <div className="space-y-8">
-          {BLOG_POSTS.map(post => (
+          {posts.map(post => (
             <BlogCard key={post.id} post={post} />
           ))}
         </div>
