@@ -190,7 +190,7 @@ func main() {
 	// Endpoint 4: Custom CMS Blogs
 	mux.HandleFunc("/api/blogs", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		if r.Method == "OPTIONS" {
@@ -268,6 +268,42 @@ func main() {
 				return
 			}
 			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		if r.Method == "DELETE" {
+			authHeader := r.Header.Get("Authorization")
+			if !strings.HasPrefix(authHeader, "Bearer ") {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+			password := strings.TrimPrefix(authHeader, "Bearer ")
+
+			var hash string
+			err := db.QueryRow("SELECT hash FROM admin WHERE id = 1").Scan(&hash)
+			if err != nil {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			id := r.URL.Query().Get("id")
+			if id == "" {
+				http.Error(w, "Missing id parameter", http.StatusBadRequest)
+				return
+			}
+
+			_, err = db.Exec("DELETE FROM blogs WHERE id = ?", id)
+			if err != nil {
+				http.Error(w, "Database error", http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			return
 		}
 	})
 
