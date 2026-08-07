@@ -43,10 +43,6 @@ export const PROJECTS: Project[] = [
 
 export function parseBlogPost(id: string, title: string, rawMd: string, date: string, category: string): BlogPost {
   const lines = rawMd.split('\n');
-  
-  // Extract title (first H1)
-  const titleLine = lines.find(l => l.trim().startsWith('# '));
-  
   // Extract excerpt (first non-empty paragraph that isn't a heading or an image)
   const excerpt = lines.find(l => {
     const trimmed = l.trim();
@@ -62,5 +58,5 @@ export function parseBlogPost(id: string, title: string, rawMd: string, date: st
 }
 
 export const BLOG_POSTS: BlogPost[] = [
-  parseBlogPost('1','Self-hosting minecraft server on an old S10+', mcHostingMd, 'August 7, 2026', 'Mini Projects')
+  parseBlogPost('2026-08-07','Self-hosting minecraft server on an old S10+', mcHostingMd, 'August 7, 2026', 'Mini Projects')
 ];
