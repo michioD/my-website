@@ -1,5 +1,5 @@
 
-![alt text](../../public/images/s10server-demo.png)
+![alt text](/images/s10server-demo.png)
 
 Giving a second life to an old smartphone by turning it into a lightweight, portable Minecraft server.
 
