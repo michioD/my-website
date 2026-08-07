@@ -1,3 +1,5 @@
+import mcHostingMd from './blog-markdown/mc_hosting_s10.md?raw';
+
 export interface Project {
   id: string;
   title: string;
@@ -39,23 +41,26 @@ export const PROJECTS: Project[] = [
   }
 ];
 
+export function parseBlogPost(id: string, title: string, rawMd: string, date: string, category: string): BlogPost {
+  const lines = rawMd.split('\n');
+  
+  // Extract title (first H1)
+  const titleLine = lines.find(l => l.trim().startsWith('# '));
+  
+  // Extract excerpt (first non-empty paragraph that isn't a heading or an image)
+  const excerpt = lines.find(l => {
+    const trimmed = l.trim();
+    return trimmed.length > 0 && !trimmed.startsWith('#') && !trimmed.startsWith('![');
+  })?.trim() || '';
+  
+  // Calculate read time based on 238 words per minute
+  const wordCount = rawMd.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(wordCount / 238));
+  const readTime = `${minutes} min read`;
+
+  return { id, title, excerpt, date, readTime, category, content: rawMd };
+}
+
 export const BLOG_POSTS: BlogPost[] = [
-  {
-    id: '1',
-    title: 'Linear Algebra in Machine Learning',
-    excerpt: 'Deep dive into how singular value decomposition powers modern recommendation systems.',
-    date: 'March 1, 2026',
-    readTime: '10 min read',
-    category: 'Mathematics',
-    content: ''
-  },
-  {
-    id: '2',
-    title: 'Life as a Teknisk Matematik Student',
-    excerpt: 'Reflections on the first three years at KTH and the transition to master studies.',
-    date: 'February 10, 2026',
-    readTime: '6 min read',
-    category: 'Student Life',
-    content: ''
-  }
+  parseBlogPost('1','Self-hosting minecraft server on an old S10+', mcHostingMd, 'August 7, 2026', 'Mini Projects')
 ];

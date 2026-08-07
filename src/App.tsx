@@ -5,6 +5,8 @@ import { Menu, X } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Tutoring from './pages/Tutoring';
+import Blog from './pages/Blog';
+import BlogPostPage from './pages/BlogPost';
 import LedMatrixLog from './pages/LedMatrixLog';
 import VisitorStatsPage from './pages/VisitorStatsPage';
 import { VisitorStats } from './components/VisitorStats';
@@ -31,6 +33,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Tutoring', href: '/tutoring' },
+    { name: 'Blog', href: '/blog' },
   ];
 
   return (
@@ -143,6 +146,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/tutoring" element={<Tutoring />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPostPage />} />
           <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
           <Route path="/visitor-stats" element={<VisitorStatsPage />} />
         </Routes>
