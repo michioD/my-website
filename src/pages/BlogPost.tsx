@@ -37,6 +37,20 @@ export default function BlogPostPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // Update browser tab title dynamically for SEO and UX
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} - Lucas Frykman`;
+    } else {
+      document.title = 'Lucas Frykman';
+    }
+
+    // Cleanup: Reset title when the user leaves the blog post
+    return () => {
+      document.title = 'Lucas Frykman';
+    };
+  }, [post]);
+
   if (loading) {
     return <div className="py-24 text-center">Loading...</div>;
   }
