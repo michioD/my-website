@@ -47,7 +47,7 @@ const TypewriterTitle = () => {
   }, [phase]);
 
   return (
-    <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight mb-6 min-h-[3rem] md:min-h-[4rem] flex items-center">
+    <h1 className="text-4xl md:text-6xl font-bold text-[var(--text-heading)] tracking-tight mb-6 min-h-[3rem] md:min-h-[4rem] flex items-center">
       <AnimatePresence mode="wait">
         {phase !== 'done' && (
           <motion.span
@@ -60,7 +60,7 @@ const TypewriterTitle = () => {
             <motion.span
               animate={{ opacity: [1, 0] }}
               transition={{ repeat: Infinity, duration: 0.8 }}
-              className="inline-block w-[4px] h-[0.9em] bg-blue-600 align-middle ml-2"
+              className="inline-block w-[4px] h-[0.9em] bg-blue-500 align-middle ml-2"
             />
           </motion.span>
         )}
@@ -80,24 +80,20 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl"
         >
-          {/* <div className="flex items-center space-x-2 text-blue-600 font-semibold text-sm mb-4">
-            <GraduationCap size={18} />
-            <span>Teknisk Matematik @ KTH</span>
-          </div> */}
           <TypewriterTitle />
-          <p className="text-lg text-slate-600 leading-relaxed mb-8">
+          <p className="text-lg text-[var(--text-muted)] leading-relaxed mb-8">
             Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
           </p>
           <div className="flex flex-wrap gap-4 mb-12">
-            <a href="mailto:lfrykman@kth.se" className="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors flex items-center space-x-2">
+            <a href="mailto:lfrykman@kth.se" className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-md transition-colors flex items-center space-x-2 shadow-sm">
               <Mail size={16} />
               <span>Get in touch</span>
             </a>
             <div className="flex items-center space-x-3">
-              <a href="https://github.com/michioD" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+              <a href="https://github.com/michioD" className="p-2.5 rounded-md border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:border-[var(--border-hover)] transition-colors">
                 <Github size={18} />
               </a>
-              <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="p-2.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+              <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="p-2.5 rounded-md border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:border-[var(--border-hover)] transition-colors">
                 <Linkedin size={18} />
               </a>
             </div>
@@ -106,10 +102,10 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16 border-t border-slate-100">
+      <section id="projects" className="py-16 border-t border-[var(--border-color)]">
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-2xl font-bold text-slate-900">Portfolio Projects</h2>
-          <a href="https://github.com/michioD" className="text-sm font-semibold text-blue-600 hover:underline flex items-center space-x-1">
+          <h2 className="text-2xl font-bold text-[var(--text-heading)]">Portfolio Projects</h2>
+          <a href="https://github.com/michioD" className="text-sm font-semibold text-blue-500 hover:text-blue-400 hover:underline flex items-center space-x-1">
             <span>View GitHub</span>
             <ArrowUpRight size={14}/>
           </a>

@@ -8,12 +8,52 @@
 }
 
 @layer base {
+  :root, html.dark {
+    --bg-page: #0B0F19;
+    --text-body: #E2E8F0;
+    --text-heading: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border-color: #1E293B;
+    --border-hover: #334155;
+    --card-bg: rgba(17, 24, 39, 0.7);
+    --card-hover-bg: #111827;
+    --card-inner-bg: #0F172A;
+    --tag-bg: #1E293B;
+    --tag-text: #CBD5E1;
+    --nav-bg: rgba(11, 15, 25, 0.85);
+  }
+
+  html.light {
+    --bg-page: #FAF8F5;
+    --text-body: #334155;
+    --text-heading: #0F172A;
+    --text-muted: #64748B;
+    --border-color: #E8E4DC;
+    --border-hover: #DDD8CE;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --card-hover-bg: #FFFFFF;
+    --card-inner-bg: #F1EFE9;
+    --tag-bg: #EAE6DE;
+    --tag-text: #475569;
+    --nav-bg: rgba(250, 248, 245, 0.9);
+  }
+
   body {
-    @apply bg-white text-slate-900 antialiased;
+    background-color: var(--bg-page);
+    color: var(--text-body);
+    @apply antialiased transition-colors duration-200;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-heading);
   }
 }
 
-.markdown-body {
+html.dark .markdown-body {
+  @apply prose prose-invert prose-slate max-w-none;
+}
+
+html.light .markdown-body {
   @apply prose prose-slate max-w-none;
 }
 

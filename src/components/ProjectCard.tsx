@@ -14,7 +14,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="group flex flex-col space-y-3 p-4 rounded-lg border border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 transition-all cursor-pointer relative"
+      className="group flex flex-col space-y-3 p-4 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-[var(--card-hover-bg)] hover:border-[var(--border-hover)] hover:shadow-lg transition-all cursor-pointer relative"
     >
       {/* Main stretched link for the card */}
       {project.link.startsWith('/') ? (
@@ -33,7 +33,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
 const CardContent: React.FC<{ project: Project }> = ({ project }) => (
   <>
-    <div className="aspect-video overflow-hidden rounded-md bg-slate-100 mb-3 flex items-center justify-center">
+    <div className="aspect-video overflow-hidden rounded-md bg-[var(--card-inner-bg)] mb-3 flex items-center justify-center border border-[var(--border-color)]">
       <img 
         src={project.image} 
         alt={project.title}
@@ -43,15 +43,15 @@ const CardContent: React.FC<{ project: Project }> = ({ project }) => (
     </div>
     <div className="flex flex-col space-y-1.5 flex-grow">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">{project.title}</h3>
+        <h3 className="font-semibold text-[var(--text-heading)] group-hover:text-blue-500 transition-colors">{project.title}</h3>
       </div>
-      <p className="text-sm text-slate-500 leading-relaxed mb-2">
+      <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-2">
         {project.description}
       </p>
       <div className="flex items-end justify-between pt-2 mt-auto">
         <div className="flex flex-wrap gap-1.5">
           {project.tags.map(tag => (
-            <span key={tag} className="font-mono text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+            <span key={tag} className="font-mono text-[10px] text-[var(--tag-text)] bg-[var(--tag-bg)] px-1.5 py-0.5 rounded">
               {tag}
             </span>
           ))}
@@ -61,7 +61,7 @@ const CardContent: React.FC<{ project: Project }> = ({ project }) => (
             href={project.githubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="pointer-events-auto text-slate-400 hover:text-slate-900 transition-colors ml-2"
+            className="pointer-events-auto text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors ml-2"
             aria-label="View source on GitHub"
           >
             <Github size={16} />

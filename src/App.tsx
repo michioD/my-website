@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Tutoring from './pages/Tutoring';
@@ -12,6 +12,7 @@ import LedMatrixLog from './pages/LedMatrixLog';
 import VisitorStatsPage from './pages/VisitorStatsPage';
 import SLMetro from './pages/SLMetro';
 import { VisitorStats } from './components/VisitorStats';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -19,6 +20,24 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
+}
+
+function ThemeToggleButton() {
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label="Toggle theme"
+      className="p-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:border-[var(--border-hover)] transition-all flex items-center justify-center cursor-pointer shadow-sm"
+    >
+      {theme === 'dark' ? (
+        <Sun size={17} className="text-amber-400" />
+      ) : (
+        <Moon size={17} className="text-slate-700" />
+      )}
+    </button>
+  );
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -46,9 +65,9 @@ function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled ? 'bg-white/90 backdrop-blur-sm py-3 border-b border-slate-100' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled ? 'bg-[var(--nav-bg)] backdrop-blur-md py-3 border-b border-[var(--border-color)]' : 'bg-transparent py-6'}`}>
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-          <Link to="/" className="text-lg font-bold tracking-tight text-slate-900">
+          <Link to="/" className="text-lg font-bold tracking-tight text-[var(--text-heading)]">
             Lucas Frykman
           </Link>
 
@@ -58,26 +77,31 @@ function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors"
               >
                 {link.name}
               </Link>
             ))}
             <a
               href="mailto:lfrykman@kth.se"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-sm font-semibold text-blue-500 hover:text-blue-400 transition-colors"
             >
               Contact
             </a>
+            <ThemeToggleButton />
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden p-2 text-slate-900"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Mobile Actions */}
+          <div className="flex items-center space-x-3 md:hidden">
+            <ThemeToggleButton />
+            <button
+              className="p-2 text-[var(--text-heading)]"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -88,14 +112,14 @@ function Layout({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-0 z-40 bg-white pt-20 px-6 md:hidden"
+            className="fixed inset-0 z-40 bg-[var(--bg-page)] pt-20 px-6 md:hidden"
           >
             <div className="flex flex-col space-y-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-xl font-semibold text-slate-900"
+                  className="text-xl font-semibold text-[var(--text-heading)]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
@@ -103,7 +127,7 @@ function Layout({ children }: { children: React.ReactNode }) {
               ))}
               <a
                 href="mailto:lfrykman@kth.se"
-                className="text-xl font-semibold text-blue-600"
+                className="text-xl font-semibold text-blue-500"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -118,14 +142,14 @@ function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Footer */}
-      <footer className="mt-24 py-12 border-t border-slate-100">
+      <footer className="mt-24 py-12 border-t border-[var(--border-color)]">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[var(--text-muted)]">
             © {new Date().getFullYear()} Lucas Frykman. Built with React & Tailwind.
           </p>
           <div className="flex items-center space-x-6">
-            <a href="https://github.com/michioD" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">GitHub</a>
-            <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="text-xs font-semibold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">LinkedIn</a>
+            <a href="https://github.com/michioD" className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-heading)] uppercase tracking-widest transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/in/lucas-frykman-ab289518a/" className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-heading)] uppercase tracking-widest transition-colors">LinkedIn</a>
           </div>
         </div>
       </footer>
@@ -135,27 +159,27 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   useEffect(() => {
-    // Silently track the visit
-    // fetch('http://localhost:8080/api/track').catch((err) => console.error('Error tracking visit:', err));
     fetch('/api/track').catch((err) => console.error('Error tracking visit:', err));
   }, []);
 
   return (
-    <Router>
-      <ScrollToTop />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/tutoring" element={<Tutoring />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogPostPage />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
-          <Route path="/visitor-stats" element={<VisitorStatsPage />} />
-          <Route path="/sl-metro" element={<SLMetro />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <ScrollToTop />
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/tutoring" element={<Tutoring />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogPostPage />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
+            <Route path="/visitor-stats" element={<VisitorStatsPage />} />
+            <Route path="/sl-metro" element={<SLMetro />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </ThemeProvider>
   );
 }

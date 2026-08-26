@@ -11,26 +11,26 @@ export default function Tutoring() {
         transition={{ duration: 0.5 }}
         className="max-w-3xl mx-auto"
       >
-        <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold text-[var(--text-heading)] tracking-tight mb-6">
           Tutoring
         </h1>
 
-        <p className="text-lg text-slate-600 leading-relaxed mb-8">
+        <p className="text-lg text-[var(--text-muted)] leading-relaxed mb-8">
           I offer tutoring in mathematics and programming. Whether you're
           struggling with calculus, linear algebra, or want to learn how to
           code, I'm here to help.
         </p>
 
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 md:p-12 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-6">
+        <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-8 md:p-12 text-center shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-full mb-6">
             <Calendar size={32} />
           </div>
 
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">
+          <h2 className="text-2xl font-bold text-[var(--text-heading)] mb-4">
             Book a Session
           </h2>
 
-          <p className="text-slate-600 mb-8">
+          <p className="text-[var(--text-muted)] mb-8">
             Select a time that works for you.
           </p>
 
@@ -38,7 +38,7 @@ export default function Tutoring() {
             url="https://calendly.com/frykman"
             rootElement={document.getElementById("root")}
             text="Book a Session"
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition"
+            className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-md transition shadow-sm cursor-pointer"
           />
         </div>
       </motion.div>

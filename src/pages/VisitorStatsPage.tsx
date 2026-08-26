@@ -32,24 +32,24 @@ export default function VisitorStatsPage() {
       animate={{ opacity: 1, y: 0 }}
       className="py-12 md:py-24 max-w-3xl mx-auto"
     >
-      <Link to="/" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 mb-8 group">
+      <Link to="/" className="inline-flex items-center text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-heading)] mb-8 group">
         <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
         Back to Home
       </Link>
       
       <header className="mb-12">
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--text-heading)] mb-4">
           Visitor Demographics
         </h1>
-        <p className="text-lg text-slate-600">
+        <p className="text-lg text-[var(--text-muted)]">
           A permanent record of website visitors aggregated by nationality.
         </p>
       </header>
 
       {loading ? (
-        <div className="text-slate-500 italic">Loading records...</div>
+        <div className="text-[var(--text-muted)] italic">Loading records...</div>
       ) : countries.length === 0 ? (
-        <div className="text-slate-500">No visitors recorded yet.</div>
+        <div className="text-[var(--text-muted)]">No visitors recorded yet.</div>
       ) : (
         <div className="space-y-4">
           {countries.map(([country, count], index) => {

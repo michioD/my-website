@@ -73,16 +73,16 @@ export default function BlogPostPage() {
       exit={{ opacity: 0, y: 20 }}
       className="py-12 md:py-24 max-w-3xl mx-auto"
     >
-      <Link to="/blog" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 mb-8 group">
+      <Link to="/blog" className="inline-flex items-center text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-heading)] mb-8 group">
         <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
         Back to Blog
       </Link>
       
       <header className="mb-12">
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--text-heading)] mb-4">
           {post.title}
         </h1>
-        <div className="flex items-center text-sm text-slate-500 space-x-4">
+        <div className="flex items-center text-sm text-[var(--text-muted)] space-x-4">
           <span>{post.category}</span>
           <span>•</span>
           <span>{post.date}</span>
@@ -91,7 +91,7 @@ export default function BlogPostPage() {
         </div>
       </header>
 
-      <div className="prose prose-slate prose-lg max-w-none">
+      <div className="markdown-body">
         <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
     </motion.div>

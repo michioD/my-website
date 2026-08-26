@@ -31,8 +31,8 @@ export function VisitorStats() {
   const countries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
   if (countries.length === 0) {
       return (
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-2 text-slate-500 font-semibold">
+          <div className="bg-[var(--card-bg)] backdrop-blur-md rounded-lg p-3 border border-[var(--border-color)] shadow-sm">
+          <div className="flex items-center space-x-2 text-[var(--text-muted)] font-semibold">
           <Globe size={14} />
           <span className="text-xs">Awaiting first visitor...</span>
           </div>
@@ -42,16 +42,16 @@ export function VisitorStats() {
 
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-slate-200 shadow-sm">
+    <div className="bg-[var(--card-bg)] backdrop-blur-md rounded-lg p-3 border border-[var(--border-color)] shadow-sm">
       <div 
-        className="flex items-center justify-between text-slate-900 font-semibold cursor-pointer select-none"
+        className="flex items-center justify-between text-[var(--text-heading)] font-semibold cursor-pointer select-none"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center space-x-2">
           <Globe size={14} className="text-blue-500" />
           <span className="text-xs">Recent Visitors</span>
         </div>
-        <div className="text-slate-400 hover:text-slate-600 transition-colors">
+        <div className="text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors">
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </div>
       </div>

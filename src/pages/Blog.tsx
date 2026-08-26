@@ -27,10 +27,10 @@ export default function Blog() {
         className="max-w-3xl mx-auto space-y-12"
       >
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-4xl font-bold tracking-tight text-[var(--text-heading)]">
             Blog & Mini Projects
           </h1>
-          <p className="text-lg text-slate-500">
+          <p className="text-lg text-[var(--text-muted)]">
             A collection of small things I do, side projects, and random thoughts.
           </p>
         </div>
