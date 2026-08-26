@@ -37,7 +37,7 @@ const CardContent: React.FC<{ project: Project }> = ({ project }) => (
       <img 
         src={project.image} 
         alt={project.title}
-        className="h-full w-full object-cover object-[center_80%] grayscale group-hover:grayscale-0 transition-all duration-500"
+        className={`h-full w-full grayscale group-hover:grayscale-0 transition-all duration-500 ${project.imageClassName || 'object-cover object-center'}`}
         referrerPolicy="no-referrer"
       />
     </div>

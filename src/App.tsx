@@ -10,6 +10,7 @@ import BlogPostPage from './pages/BlogPost';
 import Admin from './pages/Admin';
 import LedMatrixLog from './pages/LedMatrixLog';
 import VisitorStatsPage from './pages/VisitorStatsPage';
+import SLMetro from './pages/SLMetro';
 import { VisitorStats } from './components/VisitorStats';
 
 function ScrollToTop() {
@@ -152,6 +153,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/projects/led-matrix" element={<LedMatrixLog />} />
           <Route path="/visitor-stats" element={<VisitorStatsPage />} />
+          <Route path="/sl-metro" element={<SLMetro />} />
         </Routes>
       </Layout>
     </Router>
