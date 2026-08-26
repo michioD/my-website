@@ -1,73 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, Mail, Github, Linkedin, ArrowUpRight } from 'lucide-react';
-import { PROJECTS, BLOG_POSTS } from '../constants';
+import { Mail, Github, Linkedin, ArrowUpRight } from 'lucide-react';
+import { PROJECTS } from '../constants';
 import { ProjectCard } from '../components/ProjectCard';
-import { BlogCard } from '../components/BlogCard';
-
-const TypewriterTitle = () => {
-  const text = "Welcome :)";
-  const [displayedText, setDisplayedText] = useState('');
-  const [phase, setPhase] = useState<'typing' | 'waiting' | 'deleting' | 'done'>('typing');
-
-  useEffect(() => {
-    let index = 0;
-    
-    if (phase === 'typing') {
-      const intervalId = setInterval(() => {
-        setDisplayedText(text.slice(0, index + 1));
-        index++;
-        if (index >= text.length) {
-          clearInterval(intervalId);
-          setPhase('waiting');
-        }
-      }, 100);
-      return () => clearInterval(intervalId);
-    } 
-    
-    if (phase === 'waiting') {
-      const timeoutId = setTimeout(() => {
-        setPhase('deleting');
-      }, 2000);
-      return () => clearTimeout(timeoutId);
-    }
-    
-    if (phase === 'deleting') {
-      index = text.length;
-      const intervalId = setInterval(() => {
-        setDisplayedText(text.slice(0, index - 1));
-        index--;
-        if (index <= 0) {
-          clearInterval(intervalId);
-          setPhase('done');
-        }
-      }, 50); // Deleting is slightly faster for a better effect
-      return () => clearInterval(intervalId);
-    }
-  }, [phase]);
-
-  return (
-    <h1 className="text-4xl md:text-6xl font-bold text-[var(--text-heading)] tracking-tight mb-6 min-h-[3rem] md:min-h-[4rem] flex items-center">
-      <AnimatePresence mode="wait">
-        {phase !== 'done' && (
-          <motion.span
-            key="welcome"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="block"
-          >
-            {displayedText}
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ repeat: Infinity, duration: 0.8 }}
-              className="inline-block w-[4px] h-[0.9em] bg-blue-500 align-middle ml-2"
-            />
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </h1>
-  );
-};
+import { HeroWelcome } from '../components/HeroWelcome';
 
 export default function Home() {
   return (
@@ -80,7 +16,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl"
         >
-          <TypewriterTitle />
+          <HeroWelcome />
           <p className="text-lg text-[var(--text-muted)] leading-relaxed mb-8">
             Hi, I'm Lucas. I study Engineering Mathematics at KTH Royal Institute of Technology in Stockholm. I'm passionate about solving complex problems using mathematical modeling and computational methods.
           </p>

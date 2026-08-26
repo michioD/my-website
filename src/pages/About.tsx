@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
+import { CannonCatShooter } from '../components/CannonCatShooter';
 
 export default function About() {
   return (
@@ -11,14 +12,11 @@ export default function About() {
       >
         <h1 className="text-4xl font-bold text-[var(--text-heading)] tracking-tight mb-12">About Me</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="md:col-span-2 space-y-6">
             <div className="text-[var(--text-muted)] space-y-4 leading-relaxed text-lg">
               <p>
                 I am currently pursuing my Master's degree in Engineering Mathematics at KTH. My academic interests lie at the intersection of applied mathematics, computer science, and physics.
-              </p>
-              <p>
-                
               </p>
               <p>
                 When I'm not studying, I enjoy working on side projects that challenge my understanding of algorithms and system design.
@@ -48,6 +46,8 @@ export default function About() {
             </div>
           </div>
         </div>
+
+        <CannonCatShooter />
       </motion.div>
     </div>
   );
