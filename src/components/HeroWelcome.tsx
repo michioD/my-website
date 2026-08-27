@@ -19,13 +19,16 @@ interface FullscreenPhysicsCat {
 }
 
 const REAL_CAT_IMAGES = [
-  '/images/cats/cat1.png',
-  '/images/cats/cat2.png',
+  // '/images/cats/cat1.png',
+  // '/images/cats/cat2.png',
   '/images/cats/cat3.png',
   '/images/cats/cat4.png',
   '/images/cats/cat5.png',
-  '/images/cats/cat6.png',
+  // '/images/cats/cat6.png',
   '/images/cats/cat7.png',
+  '/images/cats/mauricio.png',
+  '/images/cats/pluton.png',
+  '/images/cats/dorian.png',
 ];
 
 export const HeroWelcome: React.FC = () => {

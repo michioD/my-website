@@ -1,6 +1,5 @@
 import { MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
-import { CannonCatShooter } from '../components/CannonCatShooter';
 
 export default function About() {
   return (
@@ -47,7 +46,6 @@ export default function About() {
           </div>
         </div>
 
-        <CannonCatShooter />
       </motion.div>
     </div>
   );
