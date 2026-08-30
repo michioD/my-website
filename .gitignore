@@ -9,3 +9,7 @@ terraform/import.tf
 #node_modules and dist
 node_modules/ 
 dist/
+# Backend binaries and database
+backend/backend
+backend/visits.db
+
