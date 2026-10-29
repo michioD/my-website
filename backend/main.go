@@ -117,10 +117,12 @@ func main() {
 	}
 
 	// Create blogs table for the Custom CMS
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS blogs (id TEXT PRIMARY KEY, title TEXT, excerpt TEXT, content TEXT, date TEXT, category TEXT)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS blogs (id TEXT PRIMARY KEY, title TEXT, excerpt TEXT, content TEXT, date TEXT, category TEXT, draft INTEGER DEFAULT 0)`)
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Ensure existing databases have the draft column
+	_, _ = db.Exec(`ALTER TABLE blogs ADD COLUMN draft INTEGER DEFAULT 0`)
 
 	mux := http.NewServeMux()
 
@@ -199,7 +201,12 @@ func main() {
 		}
 
 		if r.Method == "GET" {
-			rows, err := db.Query("SELECT id, title, excerpt, content, date, category FROM blogs")
+			includeDrafts := r.URL.Query().Get("includeDrafts") == "true"
+			query := "SELECT id, title, excerpt, content, date, category, COALESCE(draft, 0) FROM blogs"
+			if !includeDrafts {
+				query += " WHERE COALESCE(draft, 0) = 0"
+			}
+			rows, err := db.Query(query)
 			if err != nil {
 				http.Error(w, "Database error", http.StatusInternalServerError)
 				return
@@ -213,11 +220,14 @@ func main() {
 				Content  string `json:"content"`
 				Date     string `json:"date"`
 				Category string `json:"category"`
+				Draft    bool   `json:"draft"`
 			}
-			var blogs []Blog
+			blogs := []Blog{}
 			for rows.Next() {
 				var b Blog
-				rows.Scan(&b.ID, &b.Title, &b.Excerpt, &b.Content, &b.Date, &b.Category)
+				var draftInt int
+				rows.Scan(&b.ID, &b.Title, &b.Excerpt, &b.Content, &b.Date, &b.Category, &draftInt)
+				b.Draft = draftInt != 0
 				blogs = append(blogs, b)
 			}
 			w.Header().Set("Content-Type", "application/json")
@@ -256,13 +266,19 @@ func main() {
 				Content  string `json:"content"`
 				Date     string `json:"date"`
 				Category string `json:"category"`
+				Draft    bool   `json:"draft"`
 			}
 			if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
 				http.Error(w, "Invalid body", http.StatusBadRequest)
 				return
 			}
 
-			_, err = db.Exec("INSERT OR REPLACE INTO blogs (id, title, excerpt, content, date, category) VALUES (?, ?, ?, ?, ?, ?)", b.ID, b.Title, b.Excerpt, b.Content, b.Date, b.Category)
+			draftInt := 0
+			if b.Draft {
+				draftInt = 1
+			}
+
+			_, err = db.Exec("INSERT OR REPLACE INTO blogs (id, title, excerpt, content, date, category, draft) VALUES (?, ?, ?, ?, ?, ?, ?)", b.ID, b.Title, b.Excerpt, b.Content, b.Date, b.Category, draftInt)
 			if err != nil {
 				http.Error(w, "DB error", http.StatusInternalServerError)
 				return

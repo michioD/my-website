@@ -12,8 +12,9 @@ export default function Blog() {
       .then(res => res.json())
       .then((data: BlogPost[]) => {
         if (data && data.length > 0) {
+          const publishedPosts = data.filter(post => !post.draft);
           // Merge dynamic DB posts with static ones
-          setPosts([...data, ...BLOG_POSTS]);
+          setPosts([...publishedPosts, ...BLOG_POSTS]);
         }
       })
       .catch(err => console.error('Failed to fetch blogs:', err));

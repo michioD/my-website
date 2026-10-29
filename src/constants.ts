@@ -19,6 +19,7 @@ export interface BlogPost {
   readTime: string;
   category: string;
   content: string;
+  draft?: boolean;
 }
 
 export const PROJECTS: Project[] = [

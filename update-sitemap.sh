@@ -14,8 +14,8 @@ fi
 # We will generate a temporary file with the new dynamic XML
 TEMP_XML=$(mktemp)
 
-# Query SQLite for all dynamic blogs and append them to the temporary XML block
-sqlite3 "$DB_PATH" "SELECT id FROM blogs;" | while read -r id; do
+# Query SQLite for all published dynamic blogs and append them to the temporary XML block
+sqlite3 "$DB_PATH" "SELECT id FROM blogs WHERE COALESCE(draft, 0) = 0;" | while read -r id; do
     echo "    <url>" >> "$TEMP_XML"
     echo "        <loc>${SITE_URL}/blog/${id}</loc>" >> "$TEMP_XML"
     echo "        <changefreq>monthly</changefreq>" >> "$TEMP_XML"

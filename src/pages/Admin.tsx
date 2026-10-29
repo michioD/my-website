@@ -11,13 +11,14 @@ export default function Admin() {
   const [content, setContent] = useState('');
   const [status, setStatus] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
+  const [isEditingDraft, setIsEditingDraft] = useState(false);
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
   const fetchPosts = () => {
-    fetch(`${API_BASE_URL}/api/blogs`)
+    fetch(`${API_BASE_URL}/api/blogs?includeDrafts=true`)
       .then(res => res.json())
       .then(data => {
-        if (data && data.length > 0) setPosts(data);
+        setPosts(Array.isArray(data) ? data : []);
       })
       .catch(err => console.error(err));
   };
@@ -28,6 +29,7 @@ export default function Admin() {
 
   const handleEdit = (post: BlogPost) => {
     setEditId(post.id);
+    setIsEditingDraft(Boolean(post.draft));
     setTitle(post.title);
     setExcerpt(post.excerpt);
     setCategory(post.category);
@@ -38,6 +40,7 @@ export default function Admin() {
 
   const handleClear = () => {
     setEditId(null);
+    setIsEditingDraft(false);
     setTitle('');
     setExcerpt('');
     setCategory('');
@@ -66,9 +69,21 @@ export default function Admin() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('Submitting...');
+  const savePost = async (asDraft: boolean) => {
+    if (!password) {
+      setStatus('Please enter the admin password.');
+      return;
+    }
+    if (!title.trim()) {
+      setStatus('Please enter a post title.');
+      return;
+    }
+    if (!asDraft && (!category.trim() || !excerpt.trim() || !content.trim())) {
+      setStatus('Please fill in category, excerpt, and content before publishing.');
+      return;
+    }
+
+    setStatus(asDraft ? 'Saving draft...' : 'Submitting...');
     
     // Auto-generate ID if it's a new post, else use existing editId
     const id = editId || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -88,6 +103,7 @@ export default function Admin() {
           category,
           date,
           content,
+          draft: asDraft,
         }),
       });
 
@@ -95,13 +111,22 @@ export default function Admin() {
         throw new Error('Authentication failed or server error');
       }
 
-      setStatus(`Blog ${editId ? 'updated' : 'posted'} successfully!`);
+      if (asDraft) {
+        setStatus('Draft saved successfully!');
+      } else {
+        setStatus(`Blog ${editId && !isEditingDraft ? 'updated' : 'published'} successfully!`);
+      }
       handleClear();
       fetchPosts();
     } catch (err) {
       console.error(err);
-      setStatus('Failed to post. Check your admin password.');
+      setStatus('Failed to save. Check your admin password.');
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await savePost(false);
   };
 
   return (
@@ -112,7 +137,14 @@ export default function Admin() {
     >
       <div className="md:col-span-2 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">{editId ? 'Edit Post' : 'New Post'}</h1>
+          <div className="flex items-center space-x-3">
+            <h1 className="text-3xl font-bold">{editId ? (isEditingDraft ? 'Edit Draft' : 'Edit Post') : 'New Post'}</h1>
+            {editId && isEditingDraft && (
+              <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                Draft
+              </span>
+            )}
+          </div>
           {editId && (
             <button onClick={handleClear} className="text-sm text-blue-600 hover:underline">
               Cancel Edit
@@ -177,12 +209,21 @@ export default function Admin() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-slate-900 text-white font-medium py-3 rounded-lg hover:bg-slate-800 transition-colors"
-          >
-            {editId ? 'Update Post' : 'Publish Post'}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              type="button"
+              onClick={() => savePost(true)}
+              className="flex-1 bg-slate-100 text-slate-800 font-medium py-3 rounded-lg border border-slate-200 hover:bg-slate-200 transition-colors"
+            >
+              {editId && isEditingDraft ? 'Update Draft' : 'Save as Draft'}
+            </button>
+            <button
+              type="submit"
+              className="flex-1 bg-slate-900 text-white font-medium py-3 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              {editId && !isEditingDraft ? 'Update Post' : 'Publish Post'}
+            </button>
+          </div>
 
           {status && (
             <p className={`text-center font-medium ${status.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
@@ -200,7 +241,18 @@ export default function Admin() {
           <ul className="space-y-4">
             {posts.map(post => (
               <li key={post.id} className="p-3 bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col space-y-2">
-                <span className="font-medium text-sm truncate">{post.title}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium text-sm truncate">{post.title}</span>
+                  {post.draft ? (
+                    <span className="shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                      Draft
+                    </span>
+                  ) : (
+                    <span className="shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      Published
+                    </span>
+                  )}
+                </div>
                 <span className="text-xs text-slate-500">{post.date}</span>
                 <div className="flex space-x-3 pt-2">
                   <button onClick={() => handleEdit(post)} className="text-xs font-medium text-blue-600 hover:underline">Edit</button>

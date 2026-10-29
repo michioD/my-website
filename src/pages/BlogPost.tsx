@@ -24,7 +24,7 @@ export default function BlogPostPage() {
     fetch(`${API_BASE_URL}/api/blogs`)
       .then(res => res.json())
       .then((data: BlogPost[]) => {
-        const dbPost = data.find(p => p.id === id);
+        const dbPost = (data || []).find(p => p.id === id && !p.draft);
         if (dbPost) {
           // Parse read time dynamically for DB posts too
           const wordCount = dbPost.content.trim().split(/\s+/).length;
